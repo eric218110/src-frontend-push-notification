@@ -8,6 +8,13 @@
   .root-wrapper {
     padding-left: 0 !important;
     padding-right: 0 !important;
+    max-width: 100% !important;
+  }
+}
+
+@media (min-width: 900px) {
+  .root-wrapper {
+    max-width: 100% !important;
   }
 }
 

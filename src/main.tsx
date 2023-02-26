@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { LoginPage } from './presentation/pages/login'
+import { MainProviders } from './presentation/providers'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <LoginPage />
+    <MainProviders />
   </React.StrictMode>
 )

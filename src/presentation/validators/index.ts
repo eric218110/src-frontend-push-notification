@@ -7,6 +7,10 @@ export const useValidator = () => {
       )
       return regexp.test(value)
     },
+    passwordIsEquals: (
+      password: string | undefined,
+      confirmPassword: string | undefined
+    ) => password?.toLowerCase() === confirmPassword?.toLowerCase(),
     passwordIsMinLenght: (value: string) => value.length <= 7
   }
 }
