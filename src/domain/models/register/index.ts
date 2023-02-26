@@ -7,3 +7,7 @@ export type RegisterFormModel = {
   phone_number?: string
   company_address?: string
 }
+
+export type RegisterUserSuccess = {
+  id: number
+}

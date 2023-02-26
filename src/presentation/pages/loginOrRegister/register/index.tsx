@@ -3,6 +3,7 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import SendIcon from '@mui/icons-material/Send'
 import {
   Box,
+  CircularProgress,
   Step,
   StepButton,
   Stepper,
@@ -12,9 +13,12 @@ import {
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import { Stack } from '@mui/system'
+import { useSnackbar } from 'notistack'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { RegisterFormModel } from '../../../../domain/models/register'
+import { useServices } from '../../../../services'
 import { useValidator } from '../../../validators'
 
 const steps = ['Dados pessoais', 'Sua empresa', 'Segurança']
@@ -35,22 +39,34 @@ export const RegisterOutlet = (): JSX.Element => {
     watch,
     formState: { errors, isValid }
   } = useForm<RegisterFormModel>()
+  const [loading, setLoading] = useState(false)
+  const [activeStep, setActiveStep] = useState(0)
+  const [completed, setCompleted] = useState<Record<string, boolean>>({})
   const { emailIsValid, passwordIsEquals } = useValidator()
+  const { registerNewUser } = useServices()
+  const { enqueueSnackbar } = useSnackbar()
+  const navigate = useNavigate()
 
-  const onSubmit = async (data: RegisterFormModel) => {
-    console.log(data)
-    console.log(isValid)
+  const onSubmit = async (payload: RegisterFormModel) => {
+    setLoading(true)
+    const { error, data } = await registerNewUser(payload)
+
+    if (error) {
+      enqueueSnackbar(error.message, { variant: 'error' })
+      setLoading(false)
+      return
+    }
+    if (data) {
+      enqueueSnackbar('Cadastro realizado', { variant: 'success' })
+      setLoading(false)
+      navigate('/home')
+    }
   }
 
-  watch((data, { name }) => {
+  watch((_, { name }) => {
     if (name === 'name' && errors.name) clearErrors('name')
     if (name === 'email' && errors.email) clearErrors('email')
   })
-
-  const [activeStep, setActiveStep] = useState(0)
-  const [completed, setCompleted] = useState<{
-    [k: number]: boolean
-  }>({})
 
   const totalSteps = () => {
     return steps.length
@@ -365,6 +381,18 @@ export const RegisterOutlet = (): JSX.Element => {
                       endIcon={<SendIcon />}
                     >
                       Enviar
+                      {loading && (
+                        <CircularProgress
+                          size={24}
+                          sx={{
+                            position: 'absolute',
+                            top: '50%',
+                            left: '50%',
+                            marginTop: '-12px',
+                            marginLeft: '-12px'
+                          }}
+                        />
+                      )}
                     </Button>
                   </Box>
                 </>
