@@ -1,5 +1,17 @@
 @media (min-width: 1200px) {
-  .css-1ss2ei0-MuiContainer-root {
+  .root-wrapper {
     max-width: 100% !important;
   }
+}
+
+@media (min-width: 600px) {
+  .root-wrapper {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+}
+
+.root-wrapper {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
