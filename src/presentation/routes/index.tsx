@@ -1,4 +1,5 @@
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import HomePage from '../pages/home'
 import { LoginOrRegisterPage } from '../pages/loginOrRegister'
 import { LoginOutlet } from '../pages/loginOrRegister/login'
 import { RegisterOutlet } from '../pages/loginOrRegister/register'
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
         element: <RegisterOutlet />
       }
     ]
+  },
+  {
+    path: 'home',
+    element: <HomePage />
   }
 ])
 
