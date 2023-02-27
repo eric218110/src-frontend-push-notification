@@ -1,7 +1,9 @@
 import { authByLoginAndPassword } from './http/auth'
-import { registerNewUser } from './http/register/index'
+import { registerNewUser } from './http/register/'
+import { signSocialWithGoogle } from './http/social/google/'
 
 export const useServices = () => ({
   authByLoginAndPassword,
-  registerNewUser
+  registerNewUser,
+  signSocialWithGoogle
 })

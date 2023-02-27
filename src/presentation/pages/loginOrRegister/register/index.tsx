@@ -8,7 +8,8 @@ import {
   StepButton,
   Stepper,
   TextField,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material'
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
@@ -136,6 +137,8 @@ export const RegisterOutlet = (): JSX.Element => {
     setActiveStep(step)
   }
 
+  const { palette } = useTheme()
+
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
       <Grid container minHeight={160} height="100vh">
@@ -146,7 +149,10 @@ export const RegisterOutlet = (): JSX.Element => {
           alignItems="center"
           flexDirection="column"
           sx={{
-            backgroundColor: 'rgba(256, 256, 256, 0.85)'
+            backgroundColor:
+              palette.background.default === '#121212'
+                ? 'rgba(0,0,0,0.9)'
+                : 'rgba(256,256,256,0.9)'
           }}
         >
           <Box sx={{ width: '90%', pl: 6, pr: 6 }}>
@@ -237,8 +243,9 @@ export const RegisterOutlet = (): JSX.Element => {
                   <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
                     <Button
                       color="inherit"
-                      disabled={true}
-                      onClick={handleBack}
+                      onClick={() => {
+                        navigate('/auth')
+                      }}
                       sx={{ mr: 1 }}
                       startIcon={<ArrowBackIcon />}
                     >
@@ -410,6 +417,12 @@ export const RegisterOutlet = (): JSX.Element => {
           display="flex"
           justifyContent="center"
           alignItems="center"
+          sx={{
+            backgroundColor:
+              palette.background.default === '#121212'
+                ? 'rgba(0,0,0,0.3)'
+                : 'rgba(256,256,256,0)'
+          }}
         ></Grid>
       </Grid>
     </form>

@@ -3,10 +3,11 @@ import HomePage from '../pages/home'
 import { LoginOrRegisterPage } from '../pages/loginOrRegister'
 import { LoginOutlet } from '../pages/loginOrRegister/login'
 import { RegisterOutlet } from '../pages/loginOrRegister/register'
+import { PrivateRoutes } from '../pages/private'
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: 'auth',
     element: <LoginOrRegisterPage />,
     children: [
       {
@@ -20,8 +21,12 @@ const router = createBrowserRouter([
     ]
   },
   {
-    path: 'home',
-    element: <HomePage />
+    path: '',
+    element: (
+      <PrivateRoutes>
+        <HomePage />
+      </PrivateRoutes>
+    )
   }
 ])
 

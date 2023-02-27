@@ -1,14 +1,23 @@
+import GoogleIcon from '@mui/icons-material/Google'
 import SendIcon from '@mui/icons-material/Send'
-import { CircularProgress, TextField, Typography } from '@mui/material'
+import {
+  CircularProgress,
+  TextField,
+  Typography,
+  useTheme
+} from '@mui/material'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
+import { useGoogleLogin } from '@react-oauth/google'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { LoginFormModel } from '../../../../domain/models/login'
+import { LoginFormModel, LoginSuccess } from '../../../../domain/models/login'
 import { useServices } from '../../../../services'
+import { signSocialWithGoogle } from '../../../../services/http/social/google'
+import { useAuth } from '../../../hooks/auth'
 import { useValidator } from '../../../validators'
 
 export const LoginOutlet = (): JSX.Element => {
@@ -21,8 +30,16 @@ export const LoginOutlet = (): JSX.Element => {
   const navigate = useNavigate()
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
+  const [loadingGoogle, setLoadingGoogle] = useState(false)
   const { emailIsValid, passwordIsMinLenght } = useValidator()
   const { authByLoginAndPassword } = useServices()
+  const { onAuth } = useAuth()
+
+  const onSuccessAuthAndRedirect = (data: LoginSuccess) => {
+    onAuth(data)
+    enqueueSnackbar('Login realizado com sucesso', { variant: 'success' })
+    navigate('/')
+  }
 
   const onSubmit = async ({ login, password }: LoginFormModel) => {
     if (passwordIsMinLenght(password)) {
@@ -40,10 +57,12 @@ export const LoginOutlet = (): JSX.Element => {
       return
     }
     setLoading(true)
-    const { error } = await authByLoginAndPassword({ login, password })
+    const { error, data } = await authByLoginAndPassword({ login, password })
     if (error) {
-      console.log(error)
       enqueueSnackbar(error.message, { variant: 'error' })
+    }
+    if (data) {
+      onSuccessAuthAndRedirect(data)
     }
     setLoading(false)
   }
@@ -51,6 +70,27 @@ export const LoginOutlet = (): JSX.Element => {
   const handlerOnPresRegister = () => {
     navigate('register')
   }
+
+  const { palette } = useTheme()
+
+  const signWithGoogle = useGoogleLogin({
+    onSuccess: async codeResponse => {
+      setLoadingGoogle(true)
+      const { data, error } = await signSocialWithGoogle(
+        codeResponse.access_token
+      )
+      if (data) {
+        onSuccessAuthAndRedirect(data)
+        setLoadingGoogle(false)
+        return
+      }
+      if (error) {
+        enqueueSnackbar(error.message, { variant: 'error' })
+      }
+      setLoadingGoogle(false)
+    },
+    flow: 'implicit'
+  })
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -62,9 +102,42 @@ export const LoginOutlet = (): JSX.Element => {
           alignItems="center"
           flexDirection="column"
           sx={{
-            backgroundColor: 'rgba(256, 256, 256, 0.85)'
+            backgroundColor:
+              palette.background.default === '#121212'
+                ? 'rgba(0,0,0,0.9)'
+                : 'rgba(256,256,256,0.9)'
           }}
         >
+          <Stack sx={{ width: '40ch' }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              endIcon={<GoogleIcon />}
+              disabled={loadingGoogle}
+              onClick={() => signWithGoogle()}
+            >
+              Continuar com o Google
+              {loadingGoogle && (
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    marginTop: '-12px',
+                    marginLeft: '-12px'
+                  }}
+                />
+              )}
+            </Button>
+          </Stack>
+          <Typography
+            sx={{ mb: 3, mt: 3 }}
+            variant="subtitle1"
+            color={'GrayText'}
+          >
+            ou
+          </Typography>
           <Controller
             name={'login'}
             control={control}
@@ -138,7 +211,6 @@ export const LoginOutlet = (): JSX.Element => {
                 />
               )}
             </Button>
-
             <Stack alignItems="center">
               <Typography variant="subtitle1" color={'GrayText'}>
                 Não possui conta?
@@ -154,6 +226,12 @@ export const LoginOutlet = (): JSX.Element => {
           display="flex"
           justifyContent="center"
           alignItems="center"
+          sx={{
+            backgroundColor:
+              palette.background.default === '#121212'
+                ? 'rgba(0,0,0,0.3)'
+                : 'rgba(256,256,256,0)'
+          }}
         ></Grid>
       </Grid>
     </form>

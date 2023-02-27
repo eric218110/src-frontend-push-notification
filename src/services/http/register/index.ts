@@ -10,9 +10,11 @@ export const registerNewUser = async (
   body: RegisterFormModel
 ): Promise<HttpResponse<RegisterUserSuccess>> => {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirme_password, ...rest } = body
     const { data } = await axiosInstance().post<RegisterUserSuccess>(
       'users/register',
-      body
+      rest
     )
     return { data }
   } catch (err) {

@@ -8,6 +8,6 @@ export type LoginSuccess = {
   user: {
     name: string
     email: string
-    id: string
+    id: number
   }
 }
