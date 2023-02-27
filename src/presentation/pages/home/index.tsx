@@ -6,6 +6,7 @@ import Drawer from '@mui/material/Drawer'
 import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import * as React from 'react'
+import { Outlet } from 'react-router-dom'
 import { DrawerHomeComponent } from './components/drawer'
 
 const drawerWidth = 240
@@ -94,6 +95,7 @@ export default function HomePage(props: Props) {
           }}
         >
           <Toolbar />
+          <Outlet />
         </Box>
       </Box>
     </>
