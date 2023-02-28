@@ -1,5 +1,5 @@
+import { Routes } from '@presentation/routes'
 import { SnackbarProvider } from 'notistack'
-import { Routes } from '../routes'
 import { AuthProvider } from './auth'
 import { GoogleSignProvider } from './google'
 import { ThemeProvider } from './theme'

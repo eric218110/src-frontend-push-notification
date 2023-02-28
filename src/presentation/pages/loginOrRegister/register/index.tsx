@@ -1,3 +1,4 @@
+import { RegisterFormModel } from '@domain/models/register'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import SendIcon from '@mui/icons-material/Send'
@@ -14,13 +15,12 @@ import {
 import Button from '@mui/material/Button'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import { Stack } from '@mui/system'
+import { useValidator } from '@presentation/validators'
+import { useServices } from '@services/index'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { RegisterFormModel } from '../../../../domain/models/register'
-import { useServices } from '../../../../services'
-import { useValidator } from '../../../validators'
 
 const steps = ['Dados pessoais', 'Sua empresa', 'Segurança']
 

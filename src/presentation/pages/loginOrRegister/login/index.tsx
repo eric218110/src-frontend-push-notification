@@ -1,3 +1,4 @@
+import { LoginFormModel, LoginSuccess } from '@domain/models/login'
 import GoogleIcon from '@mui/icons-material/Google'
 import SendIcon from '@mui/icons-material/Send'
 import {
@@ -9,16 +10,15 @@ import {
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
+import { useAuth } from '@presentation/hooks/auth'
+import { useValidator } from '@presentation/validators'
 import { useGoogleLogin } from '@react-oauth/google'
+import { signSocialWithGoogle } from '@services/http/social/google'
+import { useServices } from '@services/index'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { LoginFormModel, LoginSuccess } from '../../../../domain/models/login'
-import { useServices } from '../../../../services'
-import { signSocialWithGoogle } from '../../../../services/http/social/google'
-import { useAuth } from '../../../hooks/auth'
-import { useValidator } from '../../../validators'
 
 export const LoginOutlet = (): JSX.Element => {
   const {

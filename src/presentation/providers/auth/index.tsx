@@ -1,5 +1,5 @@
+import { LoginSuccess } from '@domain/models/login'
 import { createContext, useCallback, useEffect, useState } from 'react'
-import { LoginSuccess } from '../../../domain/models/login'
 
 export type AuthContextType = {
   onAuth: (payload: LoginSuccess) => void

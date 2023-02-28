@@ -1,6 +1,6 @@
+import imageOverlay from '@assets/overlay-2.jpg'
 import { Container } from '@mui/material'
 import { Outlet } from 'react-router-dom'
-import imageOverlay from '../../../assets/overlay-2.jpg'
 import './style.css'
 
 export const LoginOrRegisterPage = (): JSX.Element => (

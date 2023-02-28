@@ -1,3 +1,4 @@
+import { CreateApplicationForm } from '@domain/models/application'
 import {
   Button,
   CircularProgress,
@@ -8,12 +9,11 @@ import {
   DialogTitle,
   TextField
 } from '@mui/material'
+import { useAuth } from '@presentation/hooks/auth'
+import { useServices } from '@services/index'
 import { useSnackbar } from 'notistack'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { CreateApplicationForm } from '../../../../../domain/models/application'
-import { useServices } from '../../../../../services'
-import { useAuth } from '../../../../hooks/auth'
 
 type CreateNewAppComponentProps = {
   isOpen: boolean

@@ -1,11 +1,11 @@
 import { AppsPage } from '@presentation/pages/apps'
+import HomePage from '@presentation/pages/home'
+import { LoginOrRegisterPage } from '@presentation/pages/loginOrRegister'
+import { LoginOutlet } from '@presentation/pages/loginOrRegister/login'
+import { RegisterOutlet } from '@presentation/pages/loginOrRegister/register'
+import { PrivateRoutes } from '@presentation/pages/private'
+import { SettingsPage } from '@presentation/pages/settings'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import HomePage from '../pages/home'
-import { LoginOrRegisterPage } from '../pages/loginOrRegister'
-import { LoginOutlet } from '../pages/loginOrRegister/login'
-import { RegisterOutlet } from '../pages/loginOrRegister/register'
-import { PrivateRoutes } from '../pages/private'
-import { SettingsPage } from '../pages/settings'
 
 const router = createBrowserRouter([
   {
