@@ -12,15 +12,52 @@ import {
   Toolbar,
   Typography
 } from '@mui/material'
+import { useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 
-const options: Record<string, () => JSX.Element> = {
-  Configuração: () => <SettingsIcon />,
-  'Meus aplicativos': () => <AppSettingsAltIcon />,
-  'Send email': () => <InboxIcon />,
-  Drafts: () => <InboxIcon />
+const options: Record<
+  string,
+  {
+    path: string
+    icon: JSX.Element
+  }
+> = {
+  Configuração: {
+    path: '',
+    icon: <SettingsIcon />
+  },
+  'Meus apps': {
+    path: 'apps',
+    icon: <AppSettingsAltIcon />
+  },
+  'Send email': {
+    path: 'email',
+    icon: <InboxIcon />
+  },
+  Drafts: {
+    path: 'draft',
+    icon: <InboxIcon />
+  }
 }
 
 export const DrawerHomeComponent = () => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  console.log()
+
+  const [activeItem, setActiveItem] = useState(
+    location.pathname.replace('/', '')
+  )
+
+  const handlerOnPressItem = (path: string) => {
+    navigate(path)
+    setActiveItem(path)
+  }
+
+  const isActive = (path: string) =>
+    path.toLowerCase() === activeItem.toLowerCase()
+
   return (
     <div>
       <Toolbar>
@@ -28,12 +65,16 @@ export const DrawerHomeComponent = () => {
       </Toolbar>
       <Divider />
       <List>
-        {Object.entries(options).map(([key, Icon]) => (
-          <ListItem key={key} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <Icon />
-              </ListItemIcon>
+        {Object.entries(options).map(([key, { icon, path }]) => (
+          <ListItem
+            disablePadding
+            key={key}
+            onClick={() => {
+              handlerOnPressItem(path)
+            }}
+          >
+            <ListItemButton selected={isActive(path)}>
+              <ListItemIcon>{icon}</ListItemIcon>
               <ListItemText primary={key} />
             </ListItemButton>
           </ListItem>

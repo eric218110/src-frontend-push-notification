@@ -22,7 +22,7 @@ export default defineConfig({
       },
       {
         find: '@services',
-        replacement: path.resolve('./src/data')
+        replacement: path.resolve('./src/services')
       }
     ]
   }
