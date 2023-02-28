@@ -1,26 +1,18 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Divider,
-  TextField,
-  Typography
-} from '@mui/material'
+import QueuePlayNextIcon from '@mui/icons-material/QueuePlayNext'
+import { Button, Divider, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useState } from 'react'
+import { CreateNewAppComponent } from './components/createNewApp'
 
 export const SettingsPage = () => {
-  const [open, setOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
   const handleClickOpen = () => {
-    setOpen(true)
+    setIsOpen(true)
   }
 
   const handleClose = () => {
-    setOpen(false)
+    setIsOpen(false)
   }
 
   return (
@@ -31,31 +23,15 @@ export const SettingsPage = () => {
         <Typography sx={{ mb: 3 }} variant="subtitle2">
           Voçe ainda não possui nenhum aplicativo registrado
         </Typography>
-        <Button onClick={handleClickOpen}>Cadastrar agora</Button>
+        <Button
+          variant="contained"
+          onClick={handleClickOpen}
+          endIcon={<QueuePlayNextIcon />}
+        >
+          Cadastrar agora
+        </Button>
       </Box>
-      <Dialog open={open} disableEscapeKeyDown>
-        <DialogTitle>Cadastrar</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Para registrar um aplicativo é necessário preencher as seguintes
-            informações:
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Nome do app"
-            type="app_name"
-            fullWidth
-            variant="outlined"
-            sx={{ mt: 3 }}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancelar</Button>
-          <Button onClick={handleClose}>Enviar</Button>
-        </DialogActions>
-      </Dialog>
+      <CreateNewAppComponent isOpen={isOpen} onClose={handleClose} />
     </>
   )
 }

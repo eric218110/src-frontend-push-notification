@@ -47,6 +47,7 @@ export const RegisterOutlet = (): JSX.Element => {
   const { registerNewUser } = useServices()
   const { enqueueSnackbar } = useSnackbar()
   const navigate = useNavigate()
+  const { palette } = useTheme()
 
   const onSubmit = async (payload: RegisterFormModel) => {
     setLoading(true)
@@ -136,8 +137,6 @@ export const RegisterOutlet = (): JSX.Element => {
   const handleStep = (step: number) => () => {
     setActiveStep(step)
   }
-
-  const { palette } = useTheme()
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
