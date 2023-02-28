@@ -1,3 +1,4 @@
+import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt'
 import MailIcon from '@mui/icons-material/Mail'
 import InboxIcon from '@mui/icons-material/MoveToInbox'
 import SettingsIcon from '@mui/icons-material/Settings'
@@ -14,7 +15,7 @@ import {
 
 const options: Record<string, () => JSX.Element> = {
   Configuração: () => <SettingsIcon />,
-  Starred: () => <InboxIcon />,
+  'Meus aplicativos': () => <AppSettingsAltIcon />,
   'Send email': () => <InboxIcon />,
   Drafts: () => <InboxIcon />
 }

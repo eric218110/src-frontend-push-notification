@@ -1,3 +1,4 @@
+import { AppsPage } from '@presentation/pages/apps'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import HomePage from '../pages/home'
 import { LoginOrRegisterPage } from '../pages/loginOrRegister'
@@ -32,6 +33,10 @@ const router = createBrowserRouter([
       {
         path: '',
         element: <SettingsPage />
+      },
+      {
+        path: 'apps',
+        element: <AppsPage />
       }
     ]
   }
