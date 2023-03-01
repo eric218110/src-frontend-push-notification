@@ -59,6 +59,9 @@ export const AppInformations = forwardRef<
     const { data, error } = await createNewApplication(form, accessToken)
     if (data) {
       onNext()
+      enqueueSnackbar(`App ${form.app_name} criado com sucesso`, {
+        variant: 'info'
+      })
       setLoading(false)
       return
     }

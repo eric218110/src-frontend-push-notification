@@ -1,3 +1,4 @@
+import { ChannelPossibles } from '@domain/models/channel'
 import {
   Button,
   Dialog,
@@ -10,8 +11,9 @@ import {
   StepLabel,
   Stepper
 } from '@mui/material'
-import { useState } from 'react'
-import { AppInformations } from '../steps/appInformations'
+import { useRef, useState } from 'react'
+import { AppInformations, AppInformationsRef } from '../steps/appInformations'
+import { ChannelsDetails } from '../steps/channelsDetails'
 
 type CreateNewAppComponentProps = {
   isOpen: boolean
@@ -24,13 +26,30 @@ export const CreateNewAppComponent = ({
   isOpen,
   onClose
 }: CreateNewAppComponentProps): JSX.Element => {
-  const handleNext = () => {
+  const onNext = () => {
     setActiveStep(prevActiveStep => prevActiveStep + 1)
   }
 
+  const onBack = () => {
+    setActiveStep(prevActiveStep => prevActiveStep - 1)
+  }
+
+  const stepAppInformationsRef = useRef<AppInformationsRef>(null)
+
+  const currentChanel =
+    stepAppInformationsRef.current?.loadCurrentChannel() as ChannelPossibles
+
   const steps: StepType = {
-    'informações do aplicativo': <AppInformations onNext={handleNext} />,
-    'Canal de notificação': <h1>Teste</h1>,
+    'informações do aplicativo': (
+      <AppInformations onNext={onNext} ref={stepAppInformationsRef} />
+    ),
+    'Canal de notificação': (
+      <ChannelsDetails
+        currentChanel={currentChanel}
+        onNext={onNext}
+        onBack={onBack}
+      />
+    ),
     'Revisão dos dados': <h1>Valida</h1>
   }
 
@@ -40,16 +59,8 @@ export const CreateNewAppComponent = ({
     onClose()
   }
 
-  const handleBack = () => {
-    setActiveStep(prevActiveStep => prevActiveStep - 1)
-  }
-
-  const handleReset = () => {
-    setActiveStep(0)
-  }
-
   return (
-    <Dialog fullWidth maxWidth="sm" open={isOpen} disableEscapeKeyDown>
+    <Dialog fullWidth maxWidth="md" open={isOpen} disableEscapeKeyDown>
       <DialogTitle>Cadastrar</DialogTitle>
       <Divider />
       <DialogContent>
