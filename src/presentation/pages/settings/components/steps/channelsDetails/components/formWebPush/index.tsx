@@ -1,28 +1,25 @@
 import { WebPushSettingsCreateForm } from '@domain/models/settings/webpush'
-import {
-  Box,
-  Button,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  Step,
-  StepLabel,
-  Stepper,
-  TextField
-} from '@mui/material'
+import { Box, Button, Step, StepLabel, Stepper } from '@mui/material'
 import { Stack } from '@mui/system'
+import { Input } from '@presentation/components/input'
+import { Select } from '@presentation/components/select'
 import { useCallback, useEffect, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { QontoConnector, QontoStepIcon } from '../qonto'
+import { inputs } from './inputs'
 
 const steps = ['Dados básicos', 'Texto permissão', 'Texto boas vindas']
+
+const stepsPosition = { urlInformtions: 0, textPermission: 1, textWelcome: 2 }
 
 export const FormWebPush = () => {
   const {
     handleSubmit,
     control,
+    getValues,
+    setError,
+    watch,
+    clearErrors,
     formState: { isValid }
   } = useForm<WebPushSettingsCreateForm>()
 
@@ -33,9 +30,56 @@ export const FormWebPush = () => {
     setLoading(true)
   }
 
+  useEffect(() => {
+    const subscription = watch(
+      (value, { name }) => name && value[name] !== '' && clearErrors(name)
+    )
+    return () => subscription.unsubscribe()
+  }, [watch])
+
   const [currentStep, setCurrentStep] = useState(0)
 
   const handlerOnNext = useCallback(() => {
+    let isError = false
+    if (
+      currentStep === stepsPosition.urlInformtions ||
+      currentStep === stepsPosition.textPermission
+    ) {
+      const index =
+        currentStep === stepsPosition.urlInformtions
+          ? 'urlInformation'
+          : 'permission'
+
+      Object.entries(inputs[index])
+        .map(([key]) => key)
+        .forEach(input => {
+          if (!getValues(input as keyof WebPushSettingsCreateForm)) {
+            setError(input as keyof WebPushSettingsCreateForm, {
+              type: 'required'
+            })
+            isError = true
+          }
+        })
+    }
+
+    if (currentStep === stepsPosition.textWelcome) {
+      ;[
+        'message_title',
+        'message_text',
+        'enable_url_redirect',
+        'url_redirect'
+      ].forEach(input => {
+        if (!getValues(input as keyof WebPushSettingsCreateForm)) {
+          setError(input as keyof WebPushSettingsCreateForm, {
+            type: 'required'
+          })
+          isError = true
+        }
+      })
+    }
+
+    if (isError) return
+
     if (currentStep <= steps.length - 2) {
       setCurrentStep(currentStep + 1)
       return
@@ -47,10 +91,6 @@ export const FormWebPush = () => {
       setCurrentStep(currentStep - 1)
     }
   }
-
-  useEffect(() => {
-    // console.log(currentStep)
-  }, [currentStep])
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -66,253 +106,63 @@ export const FormWebPush = () => {
             </Step>
           ))}
         </Stepper>
-        {currentStep === 0 && (
+        {currentStep === stepsPosition.urlInformtions && (
           <Box>
             <Stack direction="row" gap={2} sx={{ pr: 3, pl: 3 }}>
-              <Controller
-                name={'name'}
-                control={control}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error, invalid }
-                }) => (
-                  <TextField
-                    autoFocus
-                    placeholder="Nome do site que irá enviar a notificação"
-                    type="text"
-                    onChange={onChange}
-                    value={value}
-                    error={invalid}
-                    margin="dense"
-                    label="Site"
-                    fullWidth
-                    variant="outlined"
-                    disabled={loading}
-                    sx={{ mt: 3 }}
-                    helperText={
-                      error?.type === 'required'
-                        ? 'Campo obrigatório'
-                        : error?.message
-                    }
+              {Object.entries(inputs.urlInformation).map(
+                ([key, { label, placeholder, focus, type }], index) => (
+                  <Input
+                    key={index}
+                    name={key}
+                    label={label}
+                    placeholder={placeholder}
+                    control={control}
+                    isLoading={loading}
+                    autoFocus={focus}
+                    type={type}
                   />
-                )}
-              />
-              <Controller
-                name={'address'}
-                control={control}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error, invalid }
-                }) => (
-                  <TextField
-                    autoFocus
-                    placeholder="Url do site que"
-                    type="url"
-                    onChange={onChange}
-                    value={value}
-                    error={invalid}
-                    margin="dense"
-                    label="Url"
-                    fullWidth
-                    variant="outlined"
-                    disabled={loading}
-                    sx={{ mt: 3 }}
-                    helperText={
-                      error?.type === 'required'
-                        ? 'Campo obrigatório'
-                        : error?.message
-                    }
-                  />
-                )}
-              />
-              <Controller
-                name={'url_icon'}
-                control={control}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error, invalid }
-                }) => (
-                  <TextField
-                    autoFocus
-                    placeholder="Imagem do ícone do site"
-                    type="url"
-                    onChange={onChange}
-                    value={value}
-                    error={invalid}
-                    margin="dense"
-                    label="Url Icon"
-                    fullWidth
-                    variant="outlined"
-                    disabled={loading}
-                    sx={{ mt: 3 }}
-                    helperText={
-                      error?.type === 'required'
-                        ? 'Campo obrigatório'
-                        : error?.message
-                    }
-                  />
-                )}
-              />
+                )
+              )}
             </Stack>
           </Box>
         )}
-        {currentStep === 1 && (
+        {currentStep === stepsPosition.textPermission && (
           <Box>
             <Stack direction="row" gap={2} sx={{ pr: 3, pl: 3 }}>
-              <Controller
-                name={'message_text_allow_notification'}
-                control={control}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error, invalid }
-                }) => (
-                  <TextField
-                    autoFocus
-                    placeholder="Texto da mensagem de permissão"
-                    type="text"
-                    onChange={onChange}
-                    value={value}
-                    error={invalid}
-                    margin="dense"
-                    label="Texto Mensagem"
-                    fullWidth
-                    variant="outlined"
-                    disabled={loading}
-                    sx={{ mt: 3 }}
-                    helperText={
-                      error?.type === 'required'
-                        ? 'Campo obrigatório'
-                        : error?.message
-                    }
+              {Object.entries(inputs.permission).map(
+                ([key, { label, placeholder, focus, type }], index) => (
+                  <Input
+                    key={index}
+                    name={key}
+                    label={label}
+                    placeholder={placeholder}
+                    control={control}
+                    isLoading={loading}
+                    autoFocus={focus}
+                    type={type}
                   />
-                )}
-              />
-              <Controller
-                name={'allow_button_text'}
-                control={control}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error, invalid }
-                }) => (
-                  <TextField
-                    autoFocus
-                    placeholder="Texto do botão Permitir"
-                    type="text"
-                    onChange={onChange}
-                    value={value}
-                    error={invalid}
-                    margin="dense"
-                    label="Texto permitir"
-                    fullWidth
-                    variant="outlined"
-                    disabled={loading}
-                    sx={{ mt: 3 }}
-                    helperText={
-                      error?.type === 'required'
-                        ? 'Campo obrigatório'
-                        : error?.message
-                    }
-                  />
-                )}
-              />
-              <Controller
-                name={'deny_button_text'}
-                control={control}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error, invalid }
-                }) => (
-                  <TextField
-                    autoFocus
-                    placeholder="Texto do botão Negar"
-                    type="text"
-                    onChange={onChange}
-                    value={value}
-                    error={invalid}
-                    margin="dense"
-                    label="Texto Negar"
-                    fullWidth
-                    variant="outlined"
-                    disabled={loading}
-                    sx={{ mt: 3 }}
-                    helperText={
-                      error?.type === 'required'
-                        ? 'Campo obrigatório'
-                        : error?.message
-                    }
-                  />
-                )}
-              />
+                )
+              )}
             </Stack>
           </Box>
         )}
-        {currentStep === 2 && (
+        {currentStep === stepsPosition.textWelcome && (
           <>
             <Box>
               <Stack direction="row" gap={2} sx={{ pr: 3, pl: 3 }}>
-                <Controller
+                <Input
                   name={'message_title'}
+                  label="Título da notificação"
+                  placeholder="Título para a mensagem da notificação web"
                   control={control}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error, invalid }
-                  }) => (
-                    <TextField
-                      autoFocus
-                      placeholder="Título para a mensagem da notificação web"
-                      type="text"
-                      onChange={onChange}
-                      value={value}
-                      error={invalid}
-                      margin="dense"
-                      label="Título da notificação"
-                      fullWidth
-                      variant="outlined"
-                      disabled={loading}
-                      sx={{ mt: 3 }}
-                      helperText={
-                        error?.type === 'required'
-                          ? 'Campo obrigatório'
-                          : error?.message
-                      }
-                    />
-                  )}
+                  isLoading={loading}
                 />
-                <Controller
+                <Input
                   name={'message_text'}
+                  label="Texto da mensagem"
+                  placeholder="Texto para a mensagem da notificação web"
                   control={control}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error, invalid }
-                  }) => (
-                    <TextField
-                      autoFocus
-                      placeholder="Texto para a mensagem da notificação web"
-                      type="text"
-                      onChange={onChange}
-                      value={value}
-                      error={invalid}
-                      margin="dense"
-                      label="Texto da mensagem"
-                      fullWidth
-                      variant="outlined"
-                      disabled={loading}
-                      sx={{ mt: 3 }}
-                      helperText={
-                        error?.type === 'required'
-                          ? 'Campo obrigatório'
-                          : error?.message
-                      }
-                    />
-                  )}
+                  isLoading={loading}
                 />
               </Stack>
             </Box>
@@ -323,64 +173,19 @@ export const FormWebPush = () => {
                 sx={{ pr: 3, pl: 3 }}
                 alignItems="flex-start"
               >
-                <Controller
-                  name={'enable_url_redirect'}
+                <Select
                   control={control}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error, invalid }
-                  }) => (
-                    <FormControl
-                      sx={{ minWidth: 'calc(50% - 1ch)', mt: 3 }}
-                      error={invalid}
-                    >
-                      <InputLabel htmlFor="chanel">
-                        Link de destino, ao clicar na notificação
-                      </InputLabel>
-                      <Select
-                        disabled={loading}
-                        value={value}
-                        label="Link de destino, ao clicar na notificação"
-                        onChange={onChange}
-                      >
-                        <MenuItem value="true">Habilitar</MenuItem>
-                        <MenuItem value="false">Desabilitar</MenuItem>
-                      </Select>
-                      {error && error.type === 'required' && (
-                        <FormHelperText>Campo obrigatório</FormHelperText>
-                      )}
-                    </FormControl>
-                  )}
+                  label="Link de destino, ao clicar na notificação"
+                  isLoading={loading}
+                  name="enable_url_redirect"
+                  fields={{ true: 'Habilitar', false: 'Desabilitar' }}
                 />
-                <Controller
+                <Input
                   name={'url_redirect'}
+                  label="Endereço do link de destino"
+                  placeholder="Endereço do link de destino"
                   control={control}
-                  rules={{ required: true }}
-                  render={({
-                    field: { onChange, value },
-                    fieldState: { error, invalid }
-                  }) => (
-                    <TextField
-                      autoFocus
-                      placeholder="Endereço do link de destino"
-                      type="text"
-                      onChange={onChange}
-                      value={value}
-                      error={invalid}
-                      margin="dense"
-                      label="Endereço do link de destino"
-                      fullWidth
-                      variant="outlined"
-                      disabled={loading}
-                      sx={{ mt: 3 }}
-                      helperText={
-                        error?.type === 'required'
-                          ? 'Campo obrigatório'
-                          : error?.message
-                      }
-                    />
-                  )}
+                  isLoading={loading}
                 />
               </Stack>
             </Box>

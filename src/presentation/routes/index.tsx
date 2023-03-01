@@ -5,12 +5,13 @@ import { LoginOutlet } from '@presentation/pages/loginOrRegister/login'
 import { RegisterOutlet } from '@presentation/pages/loginOrRegister/register'
 import { PrivateRoutes } from '@presentation/pages/private'
 import { SettingsPage } from '@presentation/pages/settings'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 
 const router = createBrowserRouter([
   {
     path: 'auth',
     element: <LoginOrRegisterPage />,
+    errorElement: <Navigate to="auth" />,
     children: [
       {
         path: '',
