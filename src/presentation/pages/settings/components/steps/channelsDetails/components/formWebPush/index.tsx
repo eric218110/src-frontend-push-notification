@@ -63,12 +63,7 @@ export const FormWebPush = () => {
     }
 
     if (currentStep === stepsPosition.textWelcome) {
-      ;[
-        'message_title',
-        'message_text',
-        'enable_url_redirect',
-        'url_redirect'
-      ].forEach(input => {
+      inputs.textWelcome.forEach(input => {
         if (!getValues(input as keyof WebPushSettingsCreateForm)) {
           setError(input as keyof WebPushSettingsCreateForm, {
             type: 'required'

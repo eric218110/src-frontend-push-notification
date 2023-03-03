@@ -38,7 +38,15 @@ const permission: Record<string, InputProps> = {
   }
 }
 
+const textWelcome = [
+  'message_title',
+  'message_text',
+  'enable_url_redirect',
+  'url_redirect'
+]
+
 export const inputs = {
   urlInformation,
-  permission
+  permission,
+  textWelcome
 }
