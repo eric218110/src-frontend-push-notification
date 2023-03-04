@@ -13,10 +13,12 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { useAuth } from '@presentation/hooks/auth'
+import { onAddApplication } from '@presentation/store/features/application'
 import { useServices } from '@services/index'
 import { useSnackbar } from 'notistack'
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
+import { useDispatch } from 'react-redux'
 
 type AppInformationsProps = {
   onNext: () => void
@@ -52,12 +54,14 @@ export const AppInformations = forwardRef<
   const { createNewApplication } = useServices()
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
+  const dispath = useDispatch()
 
   const onSubmit = async (form: FormType) => {
     setLoading(true)
     const accessToken = auth?.token || ''
     const { data, error } = await createNewApplication(form, accessToken)
     if (data) {
+      dispath(onAddApplication(data))
       onNext()
       enqueueSnackbar(`App ${form.app_name} criado com sucesso`, {
         variant: 'info'

@@ -7,7 +7,10 @@ type ChannelsDetailsProps = {
   onNext: () => void
 }
 
-export const ChannelsDetails = ({ currentChanel }: ChannelsDetailsProps) => {
+export const ChannelsDetails = ({
+  currentChanel,
+  onNext
+}: ChannelsDetailsProps) => {
   return (
     <Box flexDirection="column" gap={2} display="flex">
       <Divider />
@@ -18,7 +21,7 @@ export const ChannelsDetails = ({ currentChanel }: ChannelsDetailsProps) => {
           color="Highlight"
         >{` ${currentChanel}`}</Typography>
       </Typography>
-      {currentChanel === 'web-push' && <FormWebPush />}
+      {currentChanel === 'web-push' && <FormWebPush onNext={onNext} />}
     </Box>
   )
 }

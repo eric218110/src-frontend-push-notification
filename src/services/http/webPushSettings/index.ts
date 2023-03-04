@@ -10,11 +10,8 @@ export const addWebPushSettingsInApplication = async (
   try {
     const body = makeBody(webPushSettingsCreateForm)
 
-    const { data } = await axiosInstance().post(
-      `apps/${applicationId}/webpushes/settings`,
-      body
-    )
-    return { data: !!data }
+    await axiosInstance().post(`apps/${applicationId}/webpushes/settings`, body)
+    return { data: true }
   } catch (err) {
     const error = err as unknown as AxiosError<{ error: string }>
 
@@ -43,7 +40,7 @@ const makeBody = (params: WebPushSettingsCreateForm) => {
     welcome_notification: {
       message_title: params.message_title,
       message_text: params.message_text,
-      enable_url_redirect: params.enable_url_redirect,
+      enable_url_redirect: Number(params.enable_url_redirect),
       url_redirect: params.url_redirect
     }
   }

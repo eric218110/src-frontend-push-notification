@@ -3,6 +3,9 @@ import { Box, Button, Step, StepLabel, Stepper } from '@mui/material'
 import { Stack } from '@mui/system'
 import { Input } from '@presentation/components/input'
 import { Select } from '@presentation/components/select'
+import { useApplicationSelectorLastItem } from '@presentation/store/features/application'
+import { addWebPushSettingsInApplication } from '@services/http/webPushSettings'
+import { useSnackbar } from 'notistack'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { QontoConnector, QontoStepIcon } from '../qonto'
@@ -12,7 +15,11 @@ const steps = ['Dados básicos', 'Texto permissão', 'Texto boas vindas']
 
 const stepsPosition = { urlInformtions: 0, textPermission: 1, textWelcome: 2 }
 
-export const FormWebPush = () => {
+type FormWebPushProps = {
+  onNext: () => void
+}
+
+export const FormWebPush = ({ onNext }: FormWebPushProps) => {
   const {
     handleSubmit,
     control,
@@ -20,14 +27,38 @@ export const FormWebPush = () => {
     setError,
     watch,
     clearErrors,
+    reset,
     formState: { isValid }
   } = useForm<WebPushSettingsCreateForm>()
 
   const [loading, setLoading] = useState(false)
+  const lastApplication = useApplicationSelectorLastItem()
+  const { enqueueSnackbar } = useSnackbar()
 
   const onSubmit = async (form: WebPushSettingsCreateForm) => {
-    console.log(form)
     setLoading(true)
+    const { data, error } = await addWebPushSettingsInApplication(
+      form,
+      lastApplication.app_id
+    )
+
+    if (data) {
+      onNext()
+      enqueueSnackbar('Configurações gravadas com successo', {
+        variant: 'info'
+      })
+      setLoading(false)
+      reset()
+      return
+    }
+
+    if (error) {
+      enqueueSnackbar(error.message, {
+        variant: 'error'
+      })
+    }
+
+    setLoading(false)
   }
 
   useEffect(() => {
@@ -173,7 +204,7 @@ export const FormWebPush = () => {
                   label="Link de destino, ao clicar na notificação"
                   isLoading={loading}
                   name="enable_url_redirect"
-                  fields={{ true: 'Habilitar', false: 'Desabilitar' }}
+                  fields={{ 1: 'Habilitar', 0: 'Desabilitar' }}
                 />
                 <Input
                   name={'url_redirect'}
