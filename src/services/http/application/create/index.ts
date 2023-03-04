@@ -7,13 +7,14 @@ import { axiosInstance } from '../../../util/axios'
 import { HttpResponse } from './../../../../domain/models/http/index'
 
 export const createNewApplication = async (
-  body: CreateApplicationForm,
-  accessToken: string
+  body: CreateApplicationForm
 ): Promise<HttpResponse<ResponseOnCreateNewApplicationSuccess>> => {
   try {
-    const { data } = await axiosInstance(
-      accessToken
-    ).post<ResponseOnCreateNewApplicationSuccess>('apps', body)
+    const { data } =
+      await axiosInstance().post<ResponseOnCreateNewApplicationSuccess>(
+        'apps',
+        body
+      )
     return { data }
   } catch (err) {
     const error = err as unknown as AxiosError<{ error: string }>

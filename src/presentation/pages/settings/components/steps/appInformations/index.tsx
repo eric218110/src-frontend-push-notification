@@ -12,7 +12,6 @@ import {
   Typography
 } from '@mui/material'
 import { Box } from '@mui/system'
-import { useAuth } from '@presentation/hooks/auth'
 import { onAddApplication } from '@presentation/store/features/application'
 import { useServices } from '@services/index'
 import { useSnackbar } from 'notistack'
@@ -50,7 +49,6 @@ export const AppInformations = forwardRef<
 
   useImperativeHandle(ref, () => ({ loadCurrentChannel }), [loadCurrentChannel])
 
-  const { auth } = useAuth()
   const { createNewApplication } = useServices()
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
@@ -58,8 +56,7 @@ export const AppInformations = forwardRef<
 
   const onSubmit = async (form: FormType) => {
     setLoading(true)
-    const accessToken = auth?.token || ''
-    const { data, error } = await createNewApplication(form, accessToken)
+    const { data, error } = await createNewApplication(form)
     if (data) {
       dispath(onAddApplication(data))
       onNext()
