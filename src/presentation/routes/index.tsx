@@ -11,7 +11,7 @@ const router = createBrowserRouter([
   {
     path: 'auth',
     element: <LoginOrRegisterPage />,
-    errorElement: <Navigate to="auth" />,
+    errorElement: <Navigate to="/auth" />,
     children: [
       {
         path: '',
