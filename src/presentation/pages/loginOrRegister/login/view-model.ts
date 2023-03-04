@@ -26,6 +26,7 @@ export const useLoginOutlet = () => {
     control,
     formState: { isValid, isSubmitting }
   } = useForm<LoginFormModel>({
+    mode: 'all',
     resolver: yupResolver(schema)
   })
 
