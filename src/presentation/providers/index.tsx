@@ -1,17 +1,21 @@
 import { Routes } from '@presentation/routes'
-import { SnackbarProvider } from 'notistack'
+import { StoreProvider } from '@presentation/store'
 import { AuthProvider } from './auth'
+import { ComposeProvider } from './compose'
 import { GoogleSignProvider } from './google'
+import { SnackBarProvider } from './snackbar'
 import { ThemeProvider } from './theme'
 
 export const MainProviders = () => (
-  <ThemeProvider>
-    <GoogleSignProvider>
-      <SnackbarProvider maxSnack={3}>
-        <AuthProvider>
-          <Routes />
-        </AuthProvider>
-      </SnackbarProvider>
-    </GoogleSignProvider>
-  </ThemeProvider>
+  <ComposeProvider
+    childrens={[
+      AuthProvider,
+      SnackBarProvider,
+      GoogleSignProvider,
+      ThemeProvider,
+      StoreProvider
+    ]}
+  >
+    <Routes />
+  </ComposeProvider>
 )
