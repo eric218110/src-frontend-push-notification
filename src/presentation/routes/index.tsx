@@ -1,4 +1,5 @@
 import { AppsPage } from '@presentation/pages/apps'
+import { ViewApp } from '@presentation/pages/apps/view'
 import HomePage from '@presentation/pages/home'
 import { LoginOrRegisterPage } from '@presentation/pages/loginOrRegister'
 import { LoginOutlet } from '@presentation/pages/loginOrRegister/login'
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'apps/:id',
-        element: <h1>App id</h1>
+        element: <ViewApp />
       }
     ]
   }
