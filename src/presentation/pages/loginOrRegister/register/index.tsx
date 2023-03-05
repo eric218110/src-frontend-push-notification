@@ -5,6 +5,7 @@ import SendIcon from '@mui/icons-material/Send'
 import {
   Box,
   CircularProgress,
+  Grid,
   Step,
   StepButton,
   Stepper,
@@ -13,7 +14,6 @@ import {
   useTheme
 } from '@mui/material'
 import Button from '@mui/material/Button'
-import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import { Stack } from '@mui/system'
 import { useValidator } from '@presentation/validators'
 import { useServices } from '@services/index'

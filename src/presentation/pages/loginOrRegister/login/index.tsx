@@ -1,8 +1,8 @@
 import GoogleIcon from '@mui/icons-material/Google'
 import SendIcon from '@mui/icons-material/Send'
-import { Typography } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import Grid from '@mui/material/Unstable_Grid2/Grid2'
+
 import { Button } from '@presentation/components/button'
 import { Input } from '@presentation/components/input'
 import { useLoginOutlet } from './view-model'
@@ -31,6 +31,7 @@ export const LoginOutlet = (): JSX.Element => {
               color="secondary"
               endIcon={<GoogleIcon />}
               disabled={googleAuth.loading}
+              isLoading={googleAuth.loading}
               onClick={() => googleAuth.sign()}
             >
               Continuar com o Google
