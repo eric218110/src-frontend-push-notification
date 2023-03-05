@@ -1,9 +1,10 @@
 import { WebPushSettingsCreateForm } from '@domain/models/settings/webpush'
-import { Box, Button, Step, StepLabel, Stepper } from '@mui/material'
+import { Box, Step, StepLabel, Stepper } from '@mui/material'
 import { Stack } from '@mui/system'
+import { Button } from '@presentation/components/button'
 import { Input } from '@presentation/components/input'
 import { Select } from '@presentation/components/select'
-import { useApplicationSelectorLastItem } from '@presentation/store/features/application'
+import { useWebPushSettings } from '@presentation/pages/settings/hook'
 import { addWebPushSettingsInApplication } from '@services/http/webPushSettings'
 import { useSnackbar } from 'notistack'
 import { useCallback, useEffect, useState } from 'react'
@@ -32,17 +33,16 @@ export const FormWebPush = ({ onNext }: FormWebPushProps) => {
   } = useForm<WebPushSettingsCreateForm>()
 
   const [loading, setLoading] = useState(false)
-  const lastApplication = useApplicationSelectorLastItem()
+  const { loadInformations, onAddWebPushSettings } = useWebPushSettings()
   const { enqueueSnackbar } = useSnackbar()
 
   const onSubmit = async (form: WebPushSettingsCreateForm) => {
     setLoading(true)
-    const { data, error } = await addWebPushSettingsInApplication(
-      form,
-      lastApplication.app_id
-    )
+    const { app_id } = loadInformations()
+    const { data, error } = await addWebPushSettingsInApplication(form, app_id)
 
     if (data) {
+      onAddWebPushSettings(form)
       onNext()
       enqueueSnackbar('Configurações gravadas com successo', {
         variant: 'info'

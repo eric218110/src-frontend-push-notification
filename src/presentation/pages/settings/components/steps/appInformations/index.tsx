@@ -12,12 +12,11 @@ import {
   Typography
 } from '@mui/material'
 import { Box } from '@mui/system'
-import { onAddApplication } from '@presentation/store/features/application'
+import { useWebPushSettings } from '@presentation/pages/settings/hook'
 import { useServices } from '@services/index'
 import { useSnackbar } from 'notistack'
 import { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
-import { useDispatch } from 'react-redux'
 
 type AppInformationsProps = {
   onNext: () => void
@@ -49,16 +48,19 @@ export const AppInformations = forwardRef<
 
   useImperativeHandle(ref, () => ({ loadCurrentChannel }), [loadCurrentChannel])
 
+  const { onAddApplication } = useWebPushSettings()
   const { createNewApplication } = useServices()
   const { enqueueSnackbar } = useSnackbar()
   const [loading, setLoading] = useState(false)
-  const dispath = useDispatch()
 
   const onSubmit = async (form: FormType) => {
     setLoading(true)
     const { data, error } = await createNewApplication(form)
     if (data) {
-      dispath(onAddApplication(data))
+      onAddApplication({
+        ...form,
+        ...data
+      })
       onNext()
       enqueueSnackbar(`App ${form.app_name} criado com sucesso`, {
         variant: 'info'

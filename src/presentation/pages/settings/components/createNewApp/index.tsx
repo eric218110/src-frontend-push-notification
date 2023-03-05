@@ -14,6 +14,7 @@ import {
 import { useRef, useState } from 'react'
 import { AppInformations, AppInformationsRef } from '../steps/appInformations'
 import { ChannelsDetails } from '../steps/channelsDetails'
+import { ReviewWebPushSettings } from '../steps/review'
 
 type CreateNewAppComponentProps = {
   isOpen: boolean
@@ -34,6 +35,11 @@ export const CreateNewAppComponent = ({
     setActiveStep(prevActiveStep => prevActiveStep - 1)
   }
 
+  const handlerOnClose = () => {
+    setActiveStep(0)
+    onClose()
+  }
+
   const stepAppInformationsRef = useRef<AppInformationsRef>(null)
 
   const currentChanel =
@@ -50,14 +56,10 @@ export const CreateNewAppComponent = ({
         onBack={onBack}
       />
     ),
-    'Revisão dos dados': <h1>Valida</h1>
+    Finalizar: <ReviewWebPushSettings onClose={handlerOnClose} />
   }
 
   const [activeStep, setActiveStep] = useState(0)
-
-  const handlerOnClose = () => {
-    onClose()
-  }
 
   return (
     <Dialog fullWidth maxWidth="md" open={isOpen} disableEscapeKeyDown>

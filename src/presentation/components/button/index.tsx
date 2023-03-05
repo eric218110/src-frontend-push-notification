@@ -15,7 +15,7 @@ export const Button = (props: ButtonProps) => {
   const { isLoading, children, ...rest } = props
 
   return (
-    <ButtonMUI type="submit" variant="contained" {...rest}>
+    <ButtonMUI variant="contained" {...rest}>
       {children}
       {isLoading && (
         <CircularProgress

@@ -44,11 +44,7 @@ export const DrawerHomeComponent = () => {
   const navigate = useNavigate()
   const location = useLocation()
 
-  console.log()
-
-  const [activeItem, setActiveItem] = useState(
-    location.pathname.replace('/', '')
-  )
+  const [activeItem, setActiveItem] = useState(location.pathname.split('/')[1])
 
   const handlerOnPressItem = (path: string) => {
     navigate(path)
@@ -60,7 +56,7 @@ export const DrawerHomeComponent = () => {
 
   return (
     <div>
-      <Toolbar>
+      <Toolbar title="teste">
         <Typography color="GrayText">Sistema de Notificações</Typography>
       </Toolbar>
       <Divider />

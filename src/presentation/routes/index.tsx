@@ -38,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: 'apps',
         element: <AppsPage />
+      },
+      {
+        path: 'apps/:id',
+        element: <h1>App id</h1>
       }
     ]
   }

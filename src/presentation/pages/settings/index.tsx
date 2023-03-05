@@ -3,6 +3,7 @@ import { Button, Divider, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useState } from 'react'
 import { CreateNewAppComponent } from './components/createNewApp'
+import { WebPushSettingsProvider } from './provider'
 
 export const SettingsPage = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -21,7 +22,7 @@ export const SettingsPage = () => {
         <Typography variant="h4">Configurações</Typography>
         <Divider sx={{ mt: 3, mb: 3 }} />
         <Typography sx={{ mb: 3 }} variant="subtitle2">
-          Voçe ainda não possui nenhum aplicativo registrado
+          Olá, clique abaixo para registrar um aplicativo
         </Typography>
         <Button
           variant="contained"
@@ -31,7 +32,9 @@ export const SettingsPage = () => {
           Cadastrar agora
         </Button>
       </Box>
-      <CreateNewAppComponent isOpen={isOpen} onClose={handleClose} />
+      <WebPushSettingsProvider>
+        <CreateNewAppComponent isOpen={isOpen} onClose={handleClose} />
+      </WebPushSettingsProvider>
     </>
   )
 }
