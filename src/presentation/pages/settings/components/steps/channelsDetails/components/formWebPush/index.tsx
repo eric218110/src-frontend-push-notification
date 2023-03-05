@@ -5,7 +5,7 @@ import { Button } from '@presentation/components/button'
 import { Input } from '@presentation/components/input'
 import { Select } from '@presentation/components/select'
 import { useWebPushSettings } from '@presentation/pages/settings/hook'
-import { addWebPushSettingsInApplication } from '@services/http/webPushSettings'
+import { useServices } from '@services/index'
 import { useSnackbar } from 'notistack'
 import { useCallback, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -35,6 +35,7 @@ export const FormWebPush = ({ onNext }: FormWebPushProps) => {
   const [loading, setLoading] = useState(false)
   const { loadInformations, onAddWebPushSettings } = useWebPushSettings()
   const { enqueueSnackbar } = useSnackbar()
+  const { addWebPushSettingsInApplication } = useServices()
 
   const onSubmit = async (form: WebPushSettingsCreateForm) => {
     setLoading(true)
@@ -45,7 +46,7 @@ export const FormWebPush = ({ onNext }: FormWebPushProps) => {
       onAddWebPushSettings(form)
       onNext()
       enqueueSnackbar('Configurações gravadas com successo', {
-        variant: 'info'
+        variant: 'success'
       })
       setLoading(false)
       reset()
