@@ -1,6 +1,4 @@
 import AppSettingsAltIcon from '@mui/icons-material/AppSettingsAlt'
-import MailIcon from '@mui/icons-material/Mail'
-import InboxIcon from '@mui/icons-material/MoveToInbox'
 import SettingsIcon from '@mui/icons-material/Settings'
 import {
   Divider,
@@ -29,14 +27,6 @@ const options: Record<
   'Meus apps': {
     path: 'apps',
     icon: <AppSettingsAltIcon />
-  },
-  'Send email': {
-    path: 'email',
-    icon: <InboxIcon />
-  },
-  Drafts: {
-    path: 'draft',
-    icon: <InboxIcon />
   }
 }
 
@@ -77,18 +67,6 @@ export const DrawerHomeComponent = () => {
         ))}
       </List>
       <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
     </div>
   )
 }

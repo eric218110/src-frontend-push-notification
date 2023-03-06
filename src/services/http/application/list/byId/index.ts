@@ -3,7 +3,7 @@ import { HttpResponse } from '@domain/models/http'
 import { axiosInstance } from '@services/util/axios'
 import { AxiosError } from 'axios'
 
-export const ListApplicationByIdService = async (
+export const listApplicationByIdService = async (
   appId: number
 ): Promise<HttpResponse<ResponseOnListApplicationById>> => {
   try {
