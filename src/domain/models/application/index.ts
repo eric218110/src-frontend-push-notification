@@ -21,7 +21,8 @@ export type ResponseOnListApplicationById = CreateApplicationForm & {
   active_channels: ChanelTypes
 }
 
-type ResponsePaginationApplicationItemsTypes = CreateApplicationForm & {
+export type ResponsePaginationApplicationItemsTypes = CreateApplicationForm & {
+  id: number
   channel: ChanelTypes
 }
 

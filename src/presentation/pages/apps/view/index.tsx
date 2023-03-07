@@ -41,7 +41,7 @@ export const ViewApp = () => {
       <Backdrop
         sx={{
           color: theme => theme.palette.primary.main,
-          zIndex: theme => theme.zIndex.drawer + 1
+          zIndex: theme => theme?.zIndex.drawer + 1
         }}
         open={isLoading}
       >
@@ -50,21 +50,21 @@ export const ViewApp = () => {
       <Stack gap={3}>
         <Stack direction="row" justifyContent="space-between">
           <Typography variant="h4" color="Highlight">
-            {data.app_name}
+            {data && data.app_name}
           </Typography>
           {
             <Button
               isLoading={isUpdating}
               disabled={isUpdating}
               onClick={handlerOpdateStatusApplication}
-              color={data.active_channels.webpush ? 'error' : 'success'}
+              color={data.active_channels?.webpush ? 'error' : 'success'}
             >
-              {data.active_channels.webpush ? 'Desativar' : 'Ativar'}
+              {data.active_channels?.webpush ? 'Desativar' : 'Ativar'}
             </Button>
           }
         </Stack>
         <Divider />
-        {data.settings && (
+        {data && data?.settings?.site?.name !== '' && (
           <Stack gap={3}>
             <Typography color="Highlight">
               Configuração de notificação
@@ -74,15 +74,17 @@ export const ViewApp = () => {
                 <Typography color="GrayText">Canal selecionado</Typography>
                 <Typography variant="inherit">Web Push</Typography>
               </div>
-              {Object.entries(data.settings.site).map(([key, value]) => (
-                <Stack justifyContent="center" key={key}>
-                  <Typography color="GrayText">{key}</Typography>
-                  <Typography variant="inherit">{value}</Typography>
-                </Stack>
-              ))}
+              {Object.entries(data?.settings?.site || {}).map(
+                ([key, value]) => (
+                  <Stack justifyContent="center" key={key}>
+                    <Typography color="GrayText">{key}</Typography>
+                    <Typography variant="inherit">{value}</Typography>
+                  </Stack>
+                )
+              )}
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              {Object.entries(data.settings.welcome_notification)
+              {Object.entries(data?.settings?.welcome_notification || {})
                 .map(([key, value]) => {
                   if (key === 'enable_url_redirect') {
                     return [key, value === 1 ? 'Habilitado' : 'Desabilitado']
@@ -97,7 +99,7 @@ export const ViewApp = () => {
                 ))}
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              {Object.entries(data.settings.allow_notification).map(
+              {Object.entries(data?.settings?.allow_notification || {}).map(
                 ([key, value]) => (
                   <Stack key={key}>
                     <Typography color="GrayText">{key}</Typography>

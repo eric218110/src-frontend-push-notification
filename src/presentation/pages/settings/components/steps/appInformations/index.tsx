@@ -126,8 +126,12 @@ export const AppInformations = forwardRef<
               onChange={onChange}
             >
               <MenuItem value="web-push">Web Push</MenuItem>
-              <MenuItem value="email">Email</MenuItem>
-              <MenuItem value="sms">SMS</MenuItem>
+              <MenuItem disabled value="email">
+                Email
+              </MenuItem>
+              <MenuItem disabled value="sms">
+                SMS
+              </MenuItem>
             </Select>
             {error && error.type === 'required' && (
               <FormHelperText>Campo obrigatório</FormHelperText>

@@ -1,4 +1,4 @@
-import { ResponseOnListApplicationById } from '@domain/models/application'
+import { ResponsePaginationApplication } from '@domain/models/application'
 import { HttpResponse } from '@domain/models/http'
 import { axiosInstance } from '@services/util/axios'
 import { AxiosError } from 'axios'
@@ -6,9 +6,9 @@ import { AxiosError } from 'axios'
 export const showAllApplication = async (
   take: number,
   skip: number
-): Promise<HttpResponse<ResponseOnListApplicationById>> => {
+): Promise<HttpResponse<ResponsePaginationApplication[]>> => {
   try {
-    const { data } = await axiosInstance().get<ResponseOnListApplicationById>(
+    const { data } = await axiosInstance().get<ResponsePaginationApplication[]>(
       `apps?skip=${skip}&take=${take}`
     )
     return { data }

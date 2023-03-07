@@ -21,7 +21,8 @@ const webPushSettingsSlice = createSlice({
       }
     )
     builder.addCase(fetchWebPushSettingsAndApplication.rejected, state => {
-      state = initialState
+      state.data = initialState.data
+      state.isLoading = initialState.isLoading
       state.error = 'Not possible read data'
     })
   }
