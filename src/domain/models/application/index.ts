@@ -11,11 +11,21 @@ export type ParamsListApplicationById = {
   appId: number
 }
 
-export type ResponseOnListApplicationById = {
-  app_name: string
-  active_channels: {
-    webpush: boolean
-    email: boolean
-    sms: boolean
-  }
+type ChanelTypes = {
+  webpush: boolean
+  email: boolean
+  sms: boolean
+}
+
+export type ResponseOnListApplicationById = CreateApplicationForm & {
+  active_channels: ChanelTypes
+}
+
+type ResponsePaginationApplicationItemsTypes = CreateApplicationForm & {
+  channel: ChanelTypes
+}
+
+export type ResponsePaginationApplication = {
+  items: ResponsePaginationApplicationItemsTypes[]
+  count: number
 }

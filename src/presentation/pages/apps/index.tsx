@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -9,60 +10,72 @@ import TableRow from '@mui/material/TableRow'
 import * as React from 'react'
 
 interface Column {
-  id: 'name' | 'code' | 'population' | 'size'
+  id: 'name' | 'webPush' | 'email' | 'sms'
   label: string
   minWidth?: number
-  align?: 'right'
+  align?: 'center'
 }
 
 const columns: readonly Column[] = [
   { id: 'name', label: 'Nome', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
+  { id: 'webPush', label: 'Web Push', minWidth: 100, align: 'center' },
   {
-    id: 'population',
-    label: 'Population',
+    id: 'email',
+    label: 'Email',
     minWidth: 170,
-    align: 'right'
+    align: 'center'
   },
   {
-    id: 'size',
-    label: 'Size\u00a0(km\u00b2)',
+    id: 'sms',
+    label: 'SMS',
     minWidth: 170,
-    align: 'right'
+    align: 'center'
   }
 ]
 
 interface Data {
   name: string
-  code: string
-  population: number
-  size: number
-  density: number
+  webPush: boolean
+  email: boolean
+  sms: boolean
 }
 
 function createData(
   name: string,
-  code: string,
-  population: number,
-  size: number
+  webPush: boolean,
+  email: boolean,
+  sms: boolean
 ): Data {
-  const density = population / size
-  return { name, code, population, size, density }
+  return { name, webPush, email, sms }
 }
 
 const rows = [
-  createData('India', 'IN', 1324171354, 3287263),
-  createData('China', 'CN', 1403500365, 9596961),
-  createData('Italy', 'IT', 60483973, 301340),
-  createData('United States', 'US', 327167434, 9833520)
+  createData('India', true, false, false),
+  createData('China', true, false, false),
+  createData('Italy', true, false, false),
+  createData('Brasil', true, false, false),
+  createData('dddd', true, false, false),
+  createData('w', true, false, false),
+  createData('eeeee', true, false, false),
+  createData('wee', true, false, false),
+  createData('wfew', true, false, false),
+  createData('424tz', true, false, false),
+  createData('444', true, false, false),
+  createData('we4t', true, false, false),
+  createData('wetyw34w', true, false, false),
+  createData('sdfsdf', true, false, false),
+  createData('sdfsdfsdf', true, false, false),
+  createData('werwe', true, false, false),
+  createData('United States', true, false, false)
 ]
 
 export const AppsPage = () => {
   const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
+    console.log(newPage, rowsPerPage)
   }
 
   const handleChangeRowsPerPage = (
@@ -94,9 +107,28 @@ export const AppsPage = () => {
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               .map(row => {
                 return (
-                  <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={Math.random().toString()}
+                  >
                     {columns.map(column => {
                       const value = row[column.id]
+                      console.log(row)
+                      if (typeof value === 'boolean') {
+                        return (
+                          <TableCell key={column.id} align={column.align}>
+                            {value ? (
+                              <Typography>Habilitado</Typography>
+                            ) : (
+                              <Typography color="GrayText">
+                                Desabilitado
+                              </Typography>
+                            )}
+                          </TableCell>
+                        )
+                      }
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {value}
@@ -110,7 +142,7 @@ export const AppsPage = () => {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+        rowsPerPageOptions={[5, 10, 25, 100]}
         component="div"
         count={rows.length}
         rowsPerPage={rowsPerPage}
