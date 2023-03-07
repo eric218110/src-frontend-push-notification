@@ -2,6 +2,7 @@ import { createNewApplication } from './http/application/create/index'
 import { authByLoginAndPassword } from './http/auth'
 import { registerNewUser } from './http/register/'
 import { signSocialWithGoogle } from './http/social/google/'
+import { activeWebPushSettings } from './http/webPushSettings/active/index'
 import { addWebPushSettingsInApplication } from './http/webPushSettings/create'
 import { listWebPushSettingsInApplicationById } from './http/webPushSettings/list'
 
@@ -11,5 +12,6 @@ export const useServices = () => ({
   signSocialWithGoogle,
   createNewApplication,
   addWebPushSettingsInApplication,
-  listWebPushSettingsInApplicationById
+  listWebPushSettingsInApplicationById,
+  activeWebPushSettings
 })

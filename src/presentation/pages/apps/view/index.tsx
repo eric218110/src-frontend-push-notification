@@ -7,7 +7,8 @@ import {
   useWebPushSettingsWithApplication
 } from '@presentation/store/features/web-push-settings'
 import { useAppDispatch } from '@presentation/store/reducer'
-import { useEffect } from 'react'
+import { useServices } from '@services/index'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export const ViewApp = () => {
@@ -15,10 +16,25 @@ export const ViewApp = () => {
   const appId = Number(pathname.split('/').pop())
   const { data, isLoading } = useWebPushSettingsWithApplication()
   const dispath = useAppDispatch()
+  const { activeWebPushSettings } = useServices()
+  const [isUpdating, setIsUpdating] = useState(false)
+
+  const fetchApplication = () => {
+    dispath(fetchWebPushSettingsAndApplication(appId))
+  }
 
   useEffect(() => {
-    dispath(fetchWebPushSettingsAndApplication(appId))
+    fetchApplication()
   }, [])
+
+  const handlerOpdateStatusApplication = async () => {
+    setIsUpdating(true)
+    const { data } = await activeWebPushSettings(appId)
+    if (data) {
+      fetchApplication()
+    }
+    setIsUpdating(false)
+  }
 
   return (
     <Stack sx={{ p: 3 }}>
@@ -36,12 +52,16 @@ export const ViewApp = () => {
           <Typography variant="h4" color="Highlight">
             {data.app_name}
           </Typography>
-          {data.active_channels.webpush && (
-            <Button color="secondary">Desativar</Button>
-          )}
-          {!data.active_channels.webpush && (
-            <Button color="secondary">Ativar</Button>
-          )}
+          {
+            <Button
+              isLoading={isUpdating}
+              disabled={isUpdating}
+              onClick={handlerOpdateStatusApplication}
+              color={data.active_channels.webpush ? 'error' : 'success'}
+            >
+              {data.active_channels.webpush ? 'Desativar' : 'Ativar'}
+            </Button>
+          }
         </Stack>
         <Divider />
         {data.settings && (

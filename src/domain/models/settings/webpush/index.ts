@@ -50,3 +50,8 @@ export type ListWebPushSettings = {
     }
   }
 }
+
+export type UpdateStatusWebPushSettings = {
+  previous_status: number
+  current_status: number
+}
