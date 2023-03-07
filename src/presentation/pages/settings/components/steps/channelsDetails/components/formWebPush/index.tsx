@@ -222,17 +222,22 @@ export const FormWebPush = ({ onNext }: FormWebPushProps) => {
           gap={2}
           direction="row"
           justifyContent="end"
-          sx={{ mt: 3, mr: 5 }}
+          sx={{ mt: 3, mr: 3 }}
         >
-          <Button onClick={handlerOnBack}>Anterior</Button>
+          <Button variant="outlined" onClick={handlerOnBack}>
+            Anterior
+          </Button>
           {currentStep !== 2 && (
-            <Button onClick={handlerOnNext}>Próximo</Button>
+            <Button variant="outlined" onClick={handlerOnNext}>
+              Próximo
+            </Button>
           )}
           {currentStep === 2 && (
             <Button
               disabled={!isValid || loading}
               type="submit"
               onClick={handlerOnNext}
+              isLoading={loading}
             >
               Enviar
             </Button>

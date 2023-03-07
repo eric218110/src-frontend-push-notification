@@ -21,7 +21,7 @@ export const ViewApp = () => {
   }, [])
 
   return (
-    <>
+    <Stack sx={{ p: 3 }}>
       <Backdrop
         sx={{
           color: theme => theme.palette.primary.main,
@@ -89,6 +89,6 @@ export const ViewApp = () => {
           </Stack>
         )}
       </Stack>
-    </>
+    </Stack>
   )
 }

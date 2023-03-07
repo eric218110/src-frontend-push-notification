@@ -1,5 +1,5 @@
 import QueuePlayNextIcon from '@mui/icons-material/QueuePlayNext'
-import { Button, Divider, Typography } from '@mui/material'
+import { Button, Divider, Stack, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { useState } from 'react'
 import { CreateNewAppComponent } from './components/createNewApp'
@@ -17,7 +17,7 @@ export const SettingsPage = () => {
   }
 
   return (
-    <>
+    <Stack sx={{ p: 3 }}>
       <Box>
         <Typography variant="h4">Configurações</Typography>
         <Divider sx={{ mt: 3, mb: 3 }} />
@@ -35,6 +35,6 @@ export const SettingsPage = () => {
       <WebPushSettingsProvider>
         <CreateNewAppComponent isOpen={isOpen} onClose={handleClose} />
       </WebPushSettingsProvider>
-    </>
+    </Stack>
   )
 }
