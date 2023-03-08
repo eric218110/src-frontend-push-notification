@@ -2,37 +2,25 @@ import { Divider, Stack, Typography } from '@mui/material'
 import Backdrop from '@mui/material/Backdrop'
 import CircularProgress from '@mui/material/CircularProgress'
 import { Button } from '@presentation/components/button'
-import {
-  fetchWebPushSettingsAndApplication,
-  useWebPushSettingsWithApplication
-} from '@presentation/store/features/web-push-settings'
-import { useAppDispatch } from '@presentation/store/reducer'
-import { useServices } from '@services/index'
-import { useEffect, useState } from 'react'
+import { useMutationActiveWebPushApplication } from '@presentation/query/active-web-push-application'
+import { useQueryWebPushWithApplication } from '@presentation/query/web-push-with-applications'
+import { useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
 export const ViewApp = () => {
   const { pathname } = useLocation()
   const appId = Number(pathname.split('/').pop())
-  const { data, isLoading } = useWebPushSettingsWithApplication()
-  const dispath = useAppDispatch()
-  const { activeWebPushSettings } = useServices()
+
   const [isUpdating, setIsUpdating] = useState(false)
 
-  const fetchApplication = () => {
-    dispath(fetchWebPushSettingsAndApplication(appId))
-  }
+  const { appInformations, isLoading, webPushSettings } =
+    useQueryWebPushWithApplication(appId)
 
-  useEffect(() => {
-    fetchApplication()
-  }, [])
+  const { mutate } = useMutationActiveWebPushApplication()
 
   const handlerOpdateStatusApplication = async () => {
     setIsUpdating(true)
-    const { data } = await activeWebPushSettings(appId)
-    if (data) {
-      fetchApplication()
-    }
+    mutate(appId)
     setIsUpdating(false)
   }
 
@@ -50,21 +38,25 @@ export const ViewApp = () => {
       <Stack gap={3}>
         <Stack direction="row" justifyContent="space-between">
           <Typography variant="h4" color="Highlight">
-            {data && data.app_name}
+            {appInformations && appInformations.app_name}
           </Typography>
           {
             <Button
               isLoading={isUpdating}
               disabled={isUpdating}
               onClick={handlerOpdateStatusApplication}
-              color={data.active_channels?.webpush ? 'error' : 'success'}
+              color={
+                appInformations?.active_channels?.webpush ? 'error' : 'success'
+              }
             >
-              {data.active_channels?.webpush ? 'Desativar' : 'Ativar'}
+              {appInformations?.active_channels?.webpush
+                ? 'Desativar'
+                : 'Ativar'}
             </Button>
           }
         </Stack>
         <Divider />
-        {data && data?.settings?.site?.name !== '' && (
+        {webPushSettings && webPushSettings?.settings?.site?.name !== '' && (
           <Stack gap={3}>
             <Typography color="Highlight">
               Configuração de notificação
@@ -74,7 +66,7 @@ export const ViewApp = () => {
                 <Typography color="GrayText">Canal selecionado</Typography>
                 <Typography variant="inherit">Web Push</Typography>
               </div>
-              {Object.entries(data?.settings?.site || {}).map(
+              {Object.entries(webPushSettings?.settings?.site || {}).map(
                 ([key, value]) => (
                   <Stack justifyContent="center" key={key}>
                     <Typography color="GrayText">{key}</Typography>
@@ -84,7 +76,9 @@ export const ViewApp = () => {
               )}
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              {Object.entries(data?.settings?.welcome_notification || {})
+              {Object.entries(
+                webPushSettings?.settings?.welcome_notification || {}
+              )
                 .map(([key, value]) => {
                   if (key === 'enable_url_redirect') {
                     return [key, value === 1 ? 'Habilitado' : 'Desabilitado']
@@ -99,14 +93,14 @@ export const ViewApp = () => {
                 ))}
             </Stack>
             <Stack direction="row" justifyContent="space-between">
-              {Object.entries(data?.settings?.allow_notification || {}).map(
-                ([key, value]) => (
-                  <Stack key={key}>
-                    <Typography color="GrayText">{key}</Typography>
-                    <Typography variant="inherit">{value}</Typography>
-                  </Stack>
-                )
-              )}
+              {Object.entries(
+                webPushSettings?.settings?.allow_notification || {}
+              ).map(([key, value]) => (
+                <Stack key={key}>
+                  <Typography color="GrayText">{key}</Typography>
+                  <Typography variant="inherit">{value}</Typography>
+                </Stack>
+              ))}
             </Stack>
           </Stack>
         )}

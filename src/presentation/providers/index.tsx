@@ -3,6 +3,7 @@ import { StoreProvider } from '@presentation/store'
 import { AuthProvider } from './auth'
 import { ComposeProvider } from './compose'
 import { GoogleSignProvider } from './google'
+import { QueryProvider } from './query'
 import { SnackBarProvider } from './snackbar'
 import { ThemeProvider } from './theme'
 
@@ -13,7 +14,8 @@ export const MainProviders = () => (
       SnackBarProvider,
       GoogleSignProvider,
       ThemeProvider,
-      StoreProvider
+      StoreProvider,
+      QueryProvider
     ]}
   >
     <Routes />
