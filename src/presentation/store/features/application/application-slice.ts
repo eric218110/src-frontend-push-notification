@@ -46,7 +46,6 @@ const applicationSlice = createSlice({
     builder.addCase(fetchAllApplication.rejected, (state, { payload }) => {
       state = initialState
       if (payload) {
-        console.log(payload)
         state.error = 'Not possible read data'
       }
     })

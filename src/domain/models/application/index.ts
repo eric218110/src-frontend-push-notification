@@ -7,6 +7,9 @@ export type ResponseOnCreateNewApplicationSuccess = {
   app_token: string
 }
 
+export type OnSuccessCreateApp = CreateApplicationForm &
+  ResponseOnCreateNewApplicationSuccess
+
 export type ParamsListApplicationById = {
   appId: number
 }

@@ -49,7 +49,6 @@ export const signSocialWithGoogle = async (
     }
   } catch (err: unknown) {
     const error = err as unknown as AxiosError
-    console.error(error)
     return {
       error: {
         message: error.message

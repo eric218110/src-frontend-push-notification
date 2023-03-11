@@ -1,4 +1,7 @@
-import { CreateApplicationForm } from '@domain/models/application'
+import {
+  CreateApplicationForm,
+  OnSuccessCreateApp
+} from '@domain/models/application'
 import { ChannelPossibles } from '@domain/models/channel'
 import {
   Button,
@@ -13,9 +16,9 @@ import {
 } from '@mui/material'
 import { Box } from '@mui/system'
 import { useWebPushSettings } from '@presentation/pages/settings/hook'
-import { useServices } from '@services/index'
+import { useQueryOnCreateApplication } from '@presentation/query/on-create-application'
 import { useSnackbar } from 'notistack'
-import { forwardRef, useCallback, useImperativeHandle, useState } from 'react'
+import { forwardRef, useCallback, useImperativeHandle } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 
 type AppInformationsProps = {
@@ -48,30 +51,27 @@ export const AppInformations = forwardRef<
 
   useImperativeHandle(ref, () => ({ loadCurrentChannel }), [loadCurrentChannel])
 
+  const handlerOnSuccess = (data: OnSuccessCreateApp) => {
+    onAddApplication(data)
+    onNext()
+    enqueueSnackbar(`App ${data.app_name} criado com sucesso`, {
+      variant: 'info'
+    })
+  }
+
   const { onAddApplication } = useWebPushSettings()
-  const { createNewApplication } = useServices()
   const { enqueueSnackbar } = useSnackbar()
-  const [loading, setLoading] = useState(false)
+  const { data, isLoading, mutate, error } =
+    useQueryOnCreateApplication(handlerOnSuccess)
 
   const onSubmit = async (form: FormType) => {
-    setLoading(true)
-    const { data, error } = await createNewApplication(form)
+    mutate(form)
     if (data) {
-      onAddApplication({
-        ...form,
-        ...data
-      })
-      onNext()
-      enqueueSnackbar(`App ${form.app_name} criado com sucesso`, {
-        variant: 'info'
-      })
-      setLoading(false)
       return
     }
 
     if (error) {
       enqueueSnackbar(error.message, { variant: 'error' })
-      setLoading(false)
       return
     }
   }
@@ -101,7 +101,7 @@ export const AppInformations = forwardRef<
             label="Nome do app"
             fullWidth
             variant="outlined"
-            disabled={loading}
+            disabled={isLoading}
             sx={{ mt: 3 }}
             helperText={
               error?.type === 'required' ? 'Campo obrigatório' : error?.message
@@ -120,7 +120,7 @@ export const AppInformations = forwardRef<
           <FormControl sx={{ mt: 2, minWidth: '100%' }} error={invalid}>
             <InputLabel htmlFor="chanel">Selecione o canal</InputLabel>
             <Select
-              disabled={loading}
+              disabled={isLoading}
               value={value}
               label="Selecione o canal"
               onChange={onChange}
@@ -143,13 +143,13 @@ export const AppInformations = forwardRef<
       <Box sx={{ mt: 2 }}>
         <div>
           <Button
-            disabled={!isValid || loading}
+            disabled={!isValid || isLoading}
             variant="contained"
             type="submit"
             sx={{ mt: 1, mr: 1 }}
           >
             Continuar
-            {loading && (
+            {isLoading && (
               <CircularProgress
                 size={24}
                 sx={{

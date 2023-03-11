@@ -9,7 +9,7 @@ export const useQueryListAllApplications = (take: number, skip: number) => {
   const { data, isLoading } = useQuery(
     [key, take, skip],
     () => showAllApplication(take, skip),
-    { refetchOnWindowFocus: false, staleTime: 5000 * 3 }
+    { refetchOnWindowFocus: false, staleTime: 5000 * 50 }
   )
 
   return {
