@@ -9,17 +9,21 @@ export const useQueryWebPushWithApplication = (applicationId: number) => {
   const keyApp = useKey('listApplicationByIdService')
   const keyWebPush = useKey('listWebPushSettingsInApplicationById')
 
-  const { data: webPushSettings, isLoading } = useQuery(keyApp, () =>
-    listWebPushSettingsInApplicationById(applicationId)
+  const { data: webPushSettings } = useQuery(
+    keyApp,
+    () => listWebPushSettingsInApplicationById(applicationId),
+    { refetchOnWindowFocus: false }
   )
 
-  const { data: appInformations } = useQuery(keyWebPush, () =>
-    listApplicationByIdService(applicationId)
+  const { data: appInformations, isFetching } = useQuery(
+    keyWebPush,
+    () => listApplicationByIdService(applicationId),
+    { refetchOnWindowFocus: false }
   )
 
   return {
     appInformations,
     webPushSettings,
-    isLoading
+    isLoading: isFetching
   }
 }

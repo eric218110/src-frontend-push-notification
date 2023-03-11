@@ -7,36 +7,33 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TablePagination from '@mui/material/TablePagination'
 import TableRow from '@mui/material/TableRow'
-import { useFetchAllApplications } from '@presentation/store/features/application'
-import { fetchAllApplication } from '@presentation/store/features/application/application-adapter'
-import { useAppDispatch } from '@presentation/store/reducer'
-import { useEffect, useState } from 'react'
+import { useQueryListAllApplications } from '@presentation/query/list-all-applications'
+import { useCallback, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAppsPage } from './view-model'
 
 export const AppsPage = () => {
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(5)
-  const dispath = useAppDispatch()
-  const { isLoading, showAllApplication } = useFetchAllApplications()
   const navigate = useNavigate()
   const { table } = useAppsPage()
 
-  const rows = showAllApplication?.items?.map(item => table.createData(item))
+  const loadCurrentPageCalc = useCallback(() => {
+    if (page > 0) {
+      return page * rowsPerPage
+    }
+    return 0
+  }, [page])
 
-  const loadAllApplication = (take: number, skip: number) => {
-    dispath(fetchAllApplication({ take, skip }))
-  }
+  const { data, isLoading } = useQueryListAllApplications(
+    rowsPerPage,
+    loadCurrentPageCalc()
+  )
 
-  useEffect(() => {
-    loadAllApplication(rowsPerPage, 0)
-  }, [rowsPerPage])
+  const rows = data?.items?.map(item => table.createData(item))
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
-    dispath(
-      fetchAllApplication({ take: rowsPerPage, skip: newPage * rowsPerPage })
-    )
   }
 
   const handleChangeRowsPerPage = (
@@ -118,7 +115,7 @@ export const AppsPage = () => {
       <TablePagination
         rowsPerPageOptions={[5, 10, 25, 100]}
         component="div"
-        count={showAllApplication.count}
+        count={Number(data?.count)}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handleChangePage}
