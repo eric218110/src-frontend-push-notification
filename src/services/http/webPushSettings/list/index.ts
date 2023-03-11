@@ -1,10 +1,10 @@
 import { ListWebPushSettings } from '@domain/models/settings/webpush'
-import { axiosInstance } from '@services/util/axios'
+import { api } from '@services/util/api'
 
 export const listWebPushSettingsInApplicationById = async (
   applicationId: number
 ) => {
-  const { data } = await axiosInstance().get<ListWebPushSettings>(
+  const { data } = await api.get<ListWebPushSettings>(
     `apps/${applicationId}/webpushes/settings`
   )
   return data

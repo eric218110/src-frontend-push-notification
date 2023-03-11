@@ -1,6 +1,6 @@
 import { HttpResponse } from '@domain/models/http'
 import { WebPushSettingsCreateForm } from '@domain/models/settings/webpush'
-import { axiosInstance } from '@services/util/axios'
+import { api } from '@services/util/api'
 import { AxiosError } from 'axios'
 
 export const addWebPushSettingsInApplication = async (
@@ -10,7 +10,7 @@ export const addWebPushSettingsInApplication = async (
   try {
     const body = makeBody(webPushSettingsCreateForm)
 
-    await axiosInstance().post(`apps/${applicationId}/webpushes/settings`, body)
+    await api.post(`apps/${applicationId}/webpushes/settings`, body)
     return { data: true }
   } catch (err) {
     const error = err as unknown as AxiosError<{ error: string }>

@@ -1,4 +1,3 @@
-import { ResponsePaginationApplicationItemsTypes } from '@domain/models/application'
 import { Backdrop, CircularProgress, Typography } from '@mui/material'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
@@ -13,51 +12,7 @@ import { fetchAllApplication } from '@presentation/store/features/application/ap
 import { useAppDispatch } from '@presentation/store/reducer'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-interface Column {
-  id: 'name' | 'webPush' | 'email' | 'sms'
-  label: string
-  minWidth?: number
-  align?: 'center'
-}
-
-const columns: readonly Column[] = [
-  { id: 'name', label: 'Nome', minWidth: 170 },
-  { id: 'webPush', label: 'Web Push', minWidth: 100, align: 'center' },
-  {
-    id: 'email',
-    label: 'Email',
-    minWidth: 170,
-    align: 'center'
-  },
-  {
-    id: 'sms',
-    label: 'SMS',
-    minWidth: 170,
-    align: 'center'
-  }
-]
-
-interface Data {
-  id: number
-  name: string
-  webPush: boolean
-  email: boolean
-  sms: boolean
-}
-
-const createData = ({
-  app_name,
-  channel,
-  id
-}: ResponsePaginationApplicationItemsTypes): Data => {
-  return {
-    id,
-    name: app_name,
-    webPush: channel.webpush,
-    email: channel.email,
-    sms: channel.sms
-  }
-}
+import { useAppsPage } from './view-model'
 
 export const AppsPage = () => {
   const [page, setPage] = useState(0)
@@ -65,8 +20,9 @@ export const AppsPage = () => {
   const dispath = useAppDispatch()
   const { isLoading, showAllApplication } = useFetchAllApplications()
   const navigate = useNavigate()
+  const { table } = useAppsPage()
 
-  const rows = showAllApplication?.items?.map(item => createData(item))
+  const rows = showAllApplication?.items?.map(item => table.createData(item))
 
   const loadAllApplication = (take: number, skip: number) => {
     dispath(fetchAllApplication({ take, skip }))
@@ -109,7 +65,7 @@ export const AppsPage = () => {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns?.map(column => (
+              {table.columns?.map(column => (
                 <TableCell
                   key={column.id}
                   align={column.align}
@@ -132,7 +88,7 @@ export const AppsPage = () => {
                     handlerOnClickItem(row.id)
                   }}
                 >
-                  {columns?.map(column => {
+                  {table.columns?.map(column => {
                     const value = row[column.id]
                     if (typeof value === 'boolean') {
                       return (

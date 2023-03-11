@@ -1,6 +1,6 @@
 import { ResponsePaginationApplication } from '@domain/models/application'
 import { HttpResponse } from '@domain/models/http'
-import { axiosInstance } from '@services/util/axios'
+import { api } from '@services/util/api'
 import { AxiosError } from 'axios'
 
 export const showAllApplication = async (
@@ -8,7 +8,7 @@ export const showAllApplication = async (
   skip: number
 ): Promise<HttpResponse<ResponsePaginationApplication[]>> => {
   try {
-    const { data } = await axiosInstance().get<ResponsePaginationApplication[]>(
+    const { data } = await api.get<ResponsePaginationApplication[]>(
       `apps?skip=${skip}&take=${take}`
     )
     return { data }

@@ -6,7 +6,7 @@ import { useGoogleLogin } from '@react-oauth/google'
 import { signSocialWithGoogle } from '@services/http/social/google/index'
 import { useServices } from '@services/index'
 import { useSnackbar } from 'notistack'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { object, string } from 'yup'
@@ -37,6 +37,16 @@ export const useLoginOutlet = () => {
   const { authByLoginAndPassword } = useServices()
 
   const [loadingGoogle, setLoadingGoogle] = useState(false)
+  const tokenHasExpired = localStorage.getItem('@@auth-token') !== null
+
+  useEffect(() => {
+    if (tokenHasExpired) {
+      enqueueSnackbar('Sessão expirada, realize login novamente', {
+        variant: 'warning'
+      })
+      localStorage.removeItem('@@auth-token')
+    }
+  }, [tokenHasExpired])
 
   const onSuccessAuthAndRedirect = (data: LoginSuccess) => {
     onAuth(data)

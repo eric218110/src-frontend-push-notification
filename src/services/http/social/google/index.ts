@@ -1,10 +1,10 @@
+import { HttpResponse } from '@domain/models/http/index'
+import { LoginSuccess } from '@domain/models/login/index'
+import { SocialGoogleResponse } from '@domain/models/social/google'
+import { loadEnvByKey } from '@services/env/'
+import { authByLoginAndPassword } from '@services/http/auth'
+import { registerNewUser } from '@services/http/register'
 import axios, { AxiosError } from 'axios'
-import { SocialGoogleResponse } from '../../../../domain/models/social/google'
-import { authByLoginAndPassword } from '../../auth'
-import { registerNewUser } from '../../register'
-import { HttpResponse } from './../../../../domain/models/http/index'
-import { LoginSuccess } from './../../../../domain/models/login/index'
-import { loadEnvByKey } from './../../../env/index'
 
 export const signSocialWithGoogle = async (
   tokenGoogle: string

@@ -1,9 +1,7 @@
 import { ResponseOnListApplicationById } from '@domain/models/application'
-import { axiosInstance } from '@services/util/axios'
+import { api } from '@services/util/api'
 
 export const listApplicationByIdService = async (appId: number) => {
-  const { data } = await axiosInstance().get<ResponseOnListApplicationById>(
-    `apps/${appId}`
-  )
+  const { data } = await api.get<ResponseOnListApplicationById>(`apps/${appId}`)
   return data
 }
